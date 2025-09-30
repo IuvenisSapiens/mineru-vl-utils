@@ -45,24 +45,24 @@ Each `ContentBlock` contains the following attributes:
 For `http-client` backend, just install the package via pip:
 
 ```bash
-pip install mineru-vl-utils==0.1.8
+pip install mineru-vl-utils==0.1.12
 ```
 
 For `transformers` backend, install the package with the `transformers` extra:
 
 ```bash
-pip install mineru-vl-utils[transformers]==0.1.8
+pip install "mineru-vl-utils[transformers]==0.1.12"
 ```
 
 For `vllm-engine` and `vllm-async-engine` backend, install the package with the `vllm` extra:
 
 ```bash
-pip install mineru-vl-utils[vllm]==0.1.8
+pip install "mineru-vl-utils[vllm]==0.1.12"
 ```
 
 Notice:
 - For using the `http-client` backend, you still need to have another
-`vllm`(or other LLM deployment tool) environment to server the model as a http server.
+`vllm`(or other LLM deployment tool) environment to serve the model as a http server.
 
 ## Serving the Model (Optional)
 
@@ -115,9 +115,10 @@ from transformers import AutoProcessor, Qwen2VLForConditionalGeneration
 from PIL import Image
 from mineru_vl_utils import MinerUClient
 
+# for transformers>=4.56.0
 model = Qwen2VLForConditionalGeneration.from_pretrained(
     "opendatalab/MinerU2.5-2509-1.2B",
-    torch_dtype="auto",
+    dtype="auto",
     device_map="auto"
 )
 
@@ -135,6 +136,17 @@ client = MinerUClient(
 image = Image.open("/path/to/the/test/image.png")
 extracted_blocks = client.two_step_extract(image)
 print(extracted_blocks)
+```
+
+If you used an old version of `transformers`(`transformers<4.56.0`),
+you need to use `torch_dtype` instead of `dtype`.
+
+```python
+model = Qwen2VLForConditionalGeneration.from_pretrained(
+    "opendatalab/MinerU2.5-2509-1.2B",
+    torch_dtype="auto",
+    device_map="auto"
+)
 ```
 
 ### `vllm-engine` Example

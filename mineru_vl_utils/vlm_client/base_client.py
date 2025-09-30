@@ -22,14 +22,14 @@ class ServerError(RuntimeError):
 
 @dataclass
 class SamplingParams:
-    temperature: float | None
-    top_p: float | None
-    top_k: int | None
-    presence_penalty: float | None  # not supported by hf
-    frequency_penalty: float | None  # not supported by hf
-    repetition_penalty: float | None
-    no_repeat_ngram_size: int | None
-    max_new_tokens: int | None
+    temperature: float | None = None
+    top_p: float | None = None
+    top_k: int | None = None
+    presence_penalty: float | None = None  # not supported by hf
+    frequency_penalty: float | None = None  # not supported by hf
+    repetition_penalty: float | None = None
+    no_repeat_ngram_size: int | None = None
+    max_new_tokens: int | None = None
 
 
 class VlmClient:
@@ -105,6 +105,7 @@ class VlmClient:
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> str:
         raise NotImplementedError()
 
@@ -113,6 +114,7 @@ class VlmClient:
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
     ) -> list[str]:
         raise NotImplementedError()
 
@@ -121,6 +123,7 @@ class VlmClient:
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> str:
         raise NotImplementedError()
 
@@ -129,6 +132,7 @@ class VlmClient:
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
         semaphore: asyncio.Semaphore | None = None,
         use_tqdm=False,
         tqdm_desc: str | None = None,

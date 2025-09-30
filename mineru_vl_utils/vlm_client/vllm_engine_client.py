@@ -118,6 +118,8 @@ class VllmEngineVlmClient(VlmClient):
             raise ServerError("No choices found in the output.")
 
         finish_reason = choices[0].finish_reason
+        if finish_reason is None:
+            raise ServerError("Finish reason is None in the output.")
         if finish_reason == "length":
             if not self.allow_truncated_content:
                 raise RequestError("The output was truncated due to length limit.")
@@ -133,6 +135,7 @@ class VllmEngineVlmClient(VlmClient):
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> str:
         return self.batch_predict(
             [image],  # type: ignore
@@ -145,11 +148,14 @@ class VllmEngineVlmClient(VlmClient):
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
     ) -> list[str]:
         if not isinstance(prompts, str):
             assert len(prompts) == len(images), "Length of prompts and images must match."
         if isinstance(sampling_params, Sequence):
             assert len(sampling_params) == len(images), "Length of sampling_params and images must match."
+        if isinstance(priority, Sequence):
+            assert len(priority) == len(images), "Length of priority and images must match."
 
         image_objs: list[Image.Image] = []
         for image in images:
@@ -185,6 +191,7 @@ class VllmEngineVlmClient(VlmClient):
 
         outputs = []
         batch_size = self.batch_size if self.batch_size > 0 else len(images)
+        batch_size = max(1, batch_size)
 
         for i in range(0, len(images), batch_size):
             batch_image_objs = image_objs[i : i + batch_size]
@@ -223,6 +230,7 @@ class VllmEngineVlmClient(VlmClient):
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> str:
         raise UnsupportedError(
             "Asynchronous aio_predict() is not supported in vllm-engine VlmClient(backend). "
@@ -235,6 +243,7 @@ class VllmEngineVlmClient(VlmClient):
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
         semaphore: asyncio.Semaphore | None = None,
         use_tqdm=False,
         tqdm_desc: str | None = None,

@@ -194,55 +194,195 @@ def try_fix_equation_big(latex: str, debug: bool = False) -> str:
     latex = re.sub(r"\\Biggl \{\\\}\}", r"\\Biggl\\}", latex)
     latex = re.sub(r"\\Biggl \{\\\{\}", r"\\Biggl\\{", latex)
 
+    # ------------------ \big{|} -> \big\| ------------------ #
+
+    # \big
+    latex = re.sub(r"\\big\{\|\}", r"\\big|", latex)
+    latex = re.sub(r"\\Big\{\|\}", r"\\Big|", latex)
+    latex = re.sub(r"\\big \{\|\}", r"\\big|", latex)
+    latex = re.sub(r"\\Big \{\|\}", r"\\Big|", latex)
+
+    # \bigm
+    latex = re.sub(r"\\bigm\{\|\}", r"\\bigm|", latex)
+    latex = re.sub(r"\\Bigm\{\|\}", r"\\Bigm|", latex)
+    latex = re.sub(r"\\bigm \{\|\}", r"\\bigm|", latex)
+    latex = re.sub(r"\\Bigm \{\|\}", r"\\Bigm|", latex)
+
+    # \bigr
+    latex = re.sub(r"\\bigr\{\|\}", r"\\bigr|", latex)
+    latex = re.sub(r"\\Bigr\{\|\}", r"\\Bigr|", latex)
+    latex = re.sub(r"\\bigr \{\|\}", r"\\bigr|", latex)
+    latex = re.sub(r"\\Bigr \{\|\}", r"\\Bigr|", latex)
+
+    # \bigl
+    latex = re.sub(r"\\bigl\{\|\}", r"\\bigl|", latex)
+    latex = re.sub(r"\\Bigl\{\|\}", r"\\Bigl|", latex)
+    latex = re.sub(r"\\bigl \{\|\}", r"\\bigl|", latex)
+    latex = re.sub(r"\\Bigl \{\|\}", r"\\Bigl|", latex)
+
+    # \bigg
+    latex = re.sub(r"\\bigg\{\|\}", r"\\bigg|", latex)
+    latex = re.sub(r"\\Bigg\{\|\}", r"\\Bigg|", latex)
+    latex = re.sub(r"\\bigg \{\|\}", r"\\bigg|", latex)
+    latex = re.sub(r"\\Bigg \{\|\}", r"\\Bigg|", latex)
+
+    # \biggr
+    latex = re.sub(r"\\biggr\{\|\}", r"\\biggr|", latex)
+    latex = re.sub(r"\\Biggr\{\|\}", r"\\Biggr|", latex)
+    latex = re.sub(r"\\biggr \{\|\}", r"\\biggr|", latex)
+    latex = re.sub(r"\\Biggr \{\|\}", r"\\Biggr|", latex)
+
+    # \biggm
+    latex = re.sub(r"\\biggm\{\|\}", r"\\biggm|", latex)
+    latex = re.sub(r"\\Biggm\{\|\}", r"\\Biggm|", latex)
+    latex = re.sub(r"\\biggm \{\|\}", r"\\biggm|", latex)
+    latex = re.sub(r"\\Biggm \{\|\}", r"\\Biggm|", latex)
+
+    # \biggl
+    latex = re.sub(r"\\biggl\{\|\}", r"\\biggl|", latex)
+    latex = re.sub(r"\\Biggl\{\|\}", r"\\Biggl|", latex)
+    latex = re.sub(r"\\biggl \{\|\}", r"\\biggl|", latex)
+    latex = re.sub(r"\\Biggl \{\|\}", r"\\Biggl|", latex)
+
     # ------------------ \big{\|} -> \big\| ------------------ #
 
     # \big
-    latex = re.sub(r"\\big{\|}", r"\\big|", latex)
-    latex = re.sub(r"\\Big{\|}", r"\\Big|", latex)
-    latex = re.sub(r"\\big {\|}", r"\\big|", latex)
-    latex = re.sub(r"\\Big {\|}", r"\\Big|", latex)
+    latex = re.sub(r"\\big\{\\\|\}", r"\\big\\|", latex)
+    latex = re.sub(r"\\Big\{\\\|\}", r"\\Big\\|", latex)
+    latex = re.sub(r"\\big \{\\\|\}", r"\\big\\|", latex)
+    latex = re.sub(r"\\Big \{\\\|\}", r"\\Big\\|", latex)
 
     # \bigm
-    latex = re.sub(r"\\bigm{\|}", r"\\bigm|", latex)
-    latex = re.sub(r"\\Bigm{\|}", r"\\Bigm|", latex)
-    latex = re.sub(r"\\bigm {\|}", r"\\bigm|", latex)
-    latex = re.sub(r"\\Bigm {\|}", r"\\Bigm|", latex)
+    latex = re.sub(r"\\bigm\{\\\|\}", r"\\bigm\\|", latex)
+    latex = re.sub(r"\\Bigm\{\\\|\}", r"\\Bigm\\|", latex)
+    latex = re.sub(r"\\bigm \{\\\|\}", r"\\bigm\\|", latex)
+    latex = re.sub(r"\\Bigm \{\\\|\}", r"\\Bigm\\|", latex)
 
     # \bigr
-    latex = re.sub(r"\\bigr{\|}", r"\\bigr|", latex)
-    latex = re.sub(r"\\Bigr{\|}", r"\\Bigr|", latex)
-    latex = re.sub(r"\\bigr {\|}", r"\\bigr|", latex)
-    latex = re.sub(r"\\Bigr {\|}", r"\\Bigr|", latex)
+    latex = re.sub(r"\\bigr\{\\\|\}", r"\\bigr\\|", latex)
+    latex = re.sub(r"\\Bigr\{\\\|\}", r"\\Bigr\\|", latex)
+    latex = re.sub(r"\\bigr \{\\\|\}", r"\\bigr\\|", latex)
+    latex = re.sub(r"\\Bigr \{\\\|\}", r"\\Bigr\\|", latex)
 
     # \bigl
-    latex = re.sub(r"\\bigl{\|}", r"\\bigl|", latex)
-    latex = re.sub(r"\\Bigl{\|}", r"\\Bigl|", latex)
-    latex = re.sub(r"\\bigl {\|}", r"\\bigl|", latex)
-    latex = re.sub(r"\\Bigl {\|}", r"\\Bigl|", latex)
+    latex = re.sub(r"\\bigl\{\\\|\}", r"\\bigl\\|", latex)
+    latex = re.sub(r"\\Bigl\{\\\|\}", r"\\Bigl\\|", latex)
+    latex = re.sub(r"\\bigl \{\\\|\}", r"\\bigl\\|", latex)
+    latex = re.sub(r"\\Bigl \{\\\|\}", r"\\Bigl\\|", latex)
 
     # \bigg
-    latex = re.sub(r"\\bigg{\|}", r"\\bigg|", latex)
-    latex = re.sub(r"\\Bigg{\|}", r"\\Bigg|", latex)
-    latex = re.sub(r"\\bigg {\|}", r"\\bigg|", latex)
-    latex = re.sub(r"\\Bigg {\|}", r"\\Bigg|", latex)
+    latex = re.sub(r"\\bigg\{\\\|\}", r"\\bigg\\|", latex)
+    latex = re.sub(r"\\Bigg\{\\\|\}", r"\\Bigg\\|", latex)
+    latex = re.sub(r"\\bigg \{\\\|\}", r"\\bigg\\|", latex)
+    latex = re.sub(r"\\Bigg \{\\\|\}", r"\\Bigg\\|", latex)
 
     # \biggr
-    latex = re.sub(r"\\biggr{\|}", r"\\biggr|", latex)
-    latex = re.sub(r"\\Biggr{\|}", r"\\Biggr|", latex)
-    latex = re.sub(r"\\biggr {\|}", r"\\biggr|", latex)
-    latex = re.sub(r"\\Biggr {\|}", r"\\Biggr|", latex)
+    latex = re.sub(r"\\biggr\{\\\|\}", r"\\biggr\\|", latex)
+    latex = re.sub(r"\\Biggr\{\\\|\}", r"\\Biggr\\|", latex)
+    latex = re.sub(r"\\biggr \{\\\|\}", r"\\biggr\\|", latex)
+    latex = re.sub(r"\\Biggr \{\\\|\}", r"\\Biggr\\|", latex)
 
     # \biggm
-    latex = re.sub(r"\\biggm\{\\\|\}", r"\\biggm\|", latex)
-    latex = re.sub(r"\\Biggm\{\\\|\}", r"\\Biggm\|", latex)
-    latex = re.sub(r"\\biggm \{\\\|\}", r"\\biggm\|", latex)
-    latex = re.sub(r"\\Biggm \{\\\|\}", r"\\Biggm\|", latex)
+    latex = re.sub(r"\\biggm\{\\\|\}", r"\\biggm\\|", latex)
+    latex = re.sub(r"\\Biggm\{\\\|\}", r"\\Biggm\\|", latex)
+    latex = re.sub(r"\\biggm \{\\\|\}", r"\\biggm\\|", latex)
+    latex = re.sub(r"\\Biggm \{\\\|\}", r"\\Biggm\\|", latex)
 
     # \biggl
-    latex = re.sub(r"\\biggl\{\\\|\}", r"\\biggl\|", latex)
-    latex = re.sub(r"\\Biggl\{\\\|\}", r"\\Biggl\|", latex)
-    latex = re.sub(r"\\biggl \{\\\|\}", r"\\biggl\|", latex)
-    latex = re.sub(r"\\Biggl \{\\\|\}", r"\\Biggl\|", latex)
+    latex = re.sub(r"\\biggl\{\\\|\}", r"\\biggl\\|", latex)
+    latex = re.sub(r"\\Biggl\{\\\|\}", r"\\Biggl\\|", latex)
+    latex = re.sub(r"\\biggl \{\\\|\}", r"\\biggl\\|", latex)
+    latex = re.sub(r"\\Biggl \{\\\|\}", r"\\Biggl\\|", latex)
+
+    # ------------------ \big{[} -> \big[ ------------------ #
+
+    # \big
+    latex = re.sub(r"\\big\{\]\}", r"\\big]", latex)
+    latex = re.sub(r"\\Big\{\]\}", r"\\Big]", latex)
+    latex = re.sub(r"\\big \{\]\}", r"\\big]", latex)
+    latex = re.sub(r"\\Big \{\]\}", r"\\Big]", latex)
+
+    latex = re.sub(r"\\big\{\[\}", r"\\big[", latex)
+    latex = re.sub(r"\\Big\{\[\}", r"\\Big[", latex)
+    latex = re.sub(r"\\big \{\[\}", r"\\big[", latex)
+    latex = re.sub(r"\\Big \{\[\}", r"\\Big[", latex)
+
+    # \bigm
+    latex = re.sub(r"\\bigm\{\]\}", r"\\bigm]", latex)
+    latex = re.sub(r"\\Bigm\{\]\}", r"\\Bigm]", latex)
+    latex = re.sub(r"\\bigm \{\]\}", r"\\bigm]", latex)
+    latex = re.sub(r"\\Bigm \{\]\}", r"\\Bigm]", latex)
+
+    latex = re.sub(r"\\bigm\{\[\}", r"\\bigm[", latex)
+    latex = re.sub(r"\\Bigm\{\[\}", r"\\Bigm[", latex)
+    latex = re.sub(r"\\bigm \{\[\}", r"\\bigm[", latex)
+    latex = re.sub(r"\\Bigm \{\[\}", r"\\Bigm[", latex)
+
+    # \bigr
+    latex = re.sub(r"\\bigr\{\]\}", r"\\bigr]", latex)
+    latex = re.sub(r"\\Bigr\{\]\}", r"\\Bigr]", latex)
+    latex = re.sub(r"\\bigr \{\]\}", r"\\bigr]", latex)
+    latex = re.sub(r"\\Bigr \{\]\}", r"\\Bigr]", latex)
+
+    latex = re.sub(r"\\bigr\{\[\}", r"\\bigr[", latex)
+    latex = re.sub(r"\\Bigr\{\[\}", r"\\Bigr[", latex)
+    latex = re.sub(r"\\bigr \{\[\}", r"\\bigr[", latex)
+    latex = re.sub(r"\\Bigr \{\[\}", r"\\Bigr[", latex)
+
+    # \bigl
+    latex = re.sub(r"\\bigl\{\]\}", r"\\bigl]", latex)
+    latex = re.sub(r"\\Bigl\{\]\}", r"\\Bigl]", latex)
+    latex = re.sub(r"\\bigl \{\]\}", r"\\bigl]", latex)
+    latex = re.sub(r"\\Bigl \{\]\}", r"\\Bigl]", latex)
+
+    latex = re.sub(r"\\bigl\{\[\}", r"\\bigl[", latex)
+    latex = re.sub(r"\\Bigl\{\[\}", r"\\Bigl[", latex)
+    latex = re.sub(r"\\bigl \{\[\}", r"\\bigl[", latex)
+    latex = re.sub(r"\\Bigl \{\[\}", r"\\Bigl[", latex)
+
+    # \bigg
+    latex = re.sub(r"\\bigg\{\]\}", r"\\bigg]", latex)
+    latex = re.sub(r"\\Bigg\{\]\}", r"\\Bigg]", latex)
+    latex = re.sub(r"\\bigg \{\]\}", r"\\bigg]", latex)
+    latex = re.sub(r"\\Bigg \{\]\}", r"\\Bigg]", latex)
+
+    latex = re.sub(r"\\bigg\{\[\}", r"\\bigg[", latex)
+    latex = re.sub(r"\\Bigg\{\[\}", r"\\Bigg[", latex)
+    latex = re.sub(r"\\bigg \{\[\}", r"\\bigg[", latex)
+    latex = re.sub(r"\\Bigg \{\[\}", r"\\Bigg[", latex)
+
+    # \biggr
+    latex = re.sub(r"\\biggr\{\]\}", r"\\biggr]", latex)
+    latex = re.sub(r"\\Biggr\{\]\}", r"\\Biggr]", latex)
+    latex = re.sub(r"\\biggr \{\]\}", r"\\biggr]", latex)
+    latex = re.sub(r"\\Biggr \{\]\}", r"\\Biggr]", latex)
+
+    latex = re.sub(r"\\biggr\{\[\}", r"\\biggr[", latex)
+    latex = re.sub(r"\\Biggr\{\[\}", r"\\Biggr[", latex)
+    latex = re.sub(r"\\biggr \{\[\}", r"\\biggr[", latex)
+    latex = re.sub(r"\\Biggr \{\[\}", r"\\Biggr[", latex)
+
+    # \biggm
+    latex = re.sub(r"\\biggm{\[}", r"\\biggm\[", latex)
+    latex = re.sub(r"\\Biggm{\[}", r"\\Biggm\[", latex)
+    latex = re.sub(r"\\biggm {\[}", r"\\biggm\[", latex)
+    latex = re.sub(r"\\Biggm {\[}", r"\\Biggm\[", latex)
+
+    latex = re.sub(r"\\biggm\{\]\}", r"\\biggm\]", latex)
+    latex = re.sub(r"\\Biggm\{\]\}", r"\\Biggm\]", latex)
+    latex = re.sub(r"\\biggm \{\]\}", r"\\biggm\]", latex)
+    latex = re.sub(r"\\Biggm \{\]\}", r"\\Biggm\]", latex)
+
+    # \biggl
+    latex = re.sub(r"\\biggl\{\[\}", r"\\biggl\[", latex)
+    latex = re.sub(r"\\Biggl\{\[\}", r"\\Biggl\[", latex)
+    latex = re.sub(r"\\biggl \{\[\}", r"\\biggl\[", latex)
+    latex = re.sub(r"\\Biggl \{\[\}", r"\\Biggl\[", latex)
+
+    latex = re.sub(r"\\biggl\{\]\}", r"\\biggl\]", latex)
+    latex = re.sub(r"\\Biggl\{\]\}", r"\\Biggl\]", latex)
+    latex = re.sub(r"\\biggl \{\]\}", r"\\biggl\]", latex)
+    latex = re.sub(r"\\Biggl \{\]\}", r"\\Biggl\]", latex)
 
     # ------------------ \big{\rangle} -> \big\rangle ------------------ #
 
@@ -336,12 +476,10 @@ def try_fix_equation_big(latex: str, debug: bool = False) -> str:
     latex = re.sub(r"\\Biggl \{\\rangle\}", r"\\Biggl\\rangle ", latex)
     latex = re.sub(r"\\Biggl \{\\langle\}", r"\\Biggl\\langle ", latex)
 
+    # \bigtimes -> \times
+    latex = re.sub(r"\\bigtimes", r"\\times", latex)
+    
     if debug and original_latex != latex:
         print(f"Fixed equation big from: {original_latex} to: {latex}")
 
     return latex
-
-
-if __name__ == "__main__":
-    latex = r"\begin{array}{l} \widehat {J} (\zeta ; u) \\ = \frac{1}{2}\mathbb{E}\left[\int_{0}^{T}\Bigg{\langle}\left( \begin{array}{ccc}0 & S_{1} + \Phi C & S_{2} + \Phi B\\ (S_{1} + \Phi C)^{\top} & R_{11} + \Phi & R_{12}\\ (S_{2} + \Phi B)^{\top} & R_{12}^{\top} & R_{22} \end{array} \right)\left( \begin{array}{c}Y - \mathbb{E}[Y]\\ Z - \mathbb{E}[Z]\\ u - \mathbb{E}[u] \end{array} \right),\left( \begin{array}{c}Y - \mathbb{E}[Y]\\ Z - \mathbb{E}[Z]\\ u - \mathbb{E}[u] \end{array} \right)\Bigg{\rangle}dt\right. \\ + \int_ {0} ^ {T} \left\langle \left( \begin{array}{c c c} 0 & \widetilde {S} _ {1} + \widetilde {\Phi} \widetilde {C} & \widetilde {S} _ {2} + \widetilde {\Phi} \widetilde {B} \\ (\widetilde {S} _ {1} + \widetilde {\Phi} \widetilde {C}) ^ {\top} & \widetilde {R} _ {1 1} + \Phi & \widetilde {R} _ {1 2} \\ (\widetilde {S} _ {2} + \widetilde {\Phi} \widetilde {B}) ^ {\top} & \widetilde {R} _ {1 2} ^ {\top} & \widetilde {R} _ {2 2} \end{array} \right) \left( \begin{array}{c} \mathbb {E} [ Y ] \\ \mathbb {E} [ Z ] \\ \mathbb {E} [ u ] \end{array} \right), \left( \begin{array}{c} \mathbb {E} [ Y ] \\ \mathbb {E} [ Z ] \\ \mathbb {E} [ u ] \end{array} \right) \right\rangle d t \\ \left. + 2 \int_ {0} ^ {T} \left\langle \left( \begin{array}{c} \widetilde {q} \\ \rho_ {1} \\ \rho_ {2} \end{array} \right), \left( \begin{array}{c} Y \\ Z \\ u \end{array} \right) \right\rangle d t + 2 \langle g, Y (0) \rangle \right]. \\ \end{array}"
-    print(try_fix_equation_big(latex))

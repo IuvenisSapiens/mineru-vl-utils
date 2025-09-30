@@ -124,6 +124,7 @@ class HttpVlmClient(VlmClient):
         prompt: str,
         sampling_params: SamplingParams | None,
         image_format: str | None,
+        priority: int | None,
     ) -> dict:
         image_url = get_image_data_url(image, image_format)
         prompt = prompt or self.prompt
@@ -181,6 +182,7 @@ class HttpVlmClient(VlmClient):
         return {
             "model": self.model_name,
             "messages": messages,
+            **({"priority": priority} if priority is not None else {}),
             **sp_dict,
         }
 
@@ -202,6 +204,8 @@ class HttpVlmClient(VlmClient):
         if not (isinstance(choices, list) and choices):
             raise ServerError("No choices found in the response.")
         finish_reason = choices[0].get("finish_reason")
+        if finish_reason is None:
+            raise ServerError("Finish reason is None in the response.")
         if finish_reason == "length":
             if not self.allow_truncated_content:
                 raise RequestError("The response was truncated due to length limit.")
@@ -224,6 +228,7 @@ class HttpVlmClient(VlmClient):
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> str:
         image_format = None
         if isinstance(image, str):
@@ -238,6 +243,7 @@ class HttpVlmClient(VlmClient):
             prompt=prompt,
             sampling_params=sampling_params,
             image_format=image_format,
+            priority=priority,
         )
 
         if self.debug:
@@ -264,6 +270,7 @@ class HttpVlmClient(VlmClient):
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
     ) -> list[str]:
         try:
             loop = asyncio.get_running_loop()
@@ -274,6 +281,7 @@ class HttpVlmClient(VlmClient):
             images=images,
             prompts=prompts,
             sampling_params=sampling_params,
+            priority=priority,
         )
 
         if loop is not None:
@@ -286,6 +294,7 @@ class HttpVlmClient(VlmClient):
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> Iterable[str]:
         image_format = None
         if isinstance(image, str):
@@ -300,6 +309,7 @@ class HttpVlmClient(VlmClient):
             prompt=prompt,
             sampling_params=sampling_params,
             image_format=image_format,
+            priority=priority,
         )
         request_body["stream"] = True
 
@@ -334,6 +344,7 @@ class HttpVlmClient(VlmClient):
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
     ) -> None:
         """
         Test the streaming functionality by printing the output.
@@ -343,6 +354,7 @@ class HttpVlmClient(VlmClient):
             image=image,
             prompt=prompt,
             sampling_params=sampling_params,
+            priority=priority,
         ):
             print(chunk, end="", flush=True)
         print("\n[End of Streaming Output]", flush=True)
@@ -352,6 +364,7 @@ class HttpVlmClient(VlmClient):
         image: Image.Image | bytes | str,
         prompt: str = "",
         sampling_params: SamplingParams | None = None,
+        priority: int | None = None,
         async_client: httpx.AsyncClient | None = None,
     ) -> str:
         image_format = None
@@ -367,6 +380,7 @@ class HttpVlmClient(VlmClient):
             prompt=prompt,
             sampling_params=sampling_params,
             image_format=image_format,
+            priority=priority,
         )
 
         if self.debug:
@@ -394,6 +408,7 @@ class HttpVlmClient(VlmClient):
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
         semaphore: asyncio.Semaphore | None = None,
         use_tqdm=False,
         tqdm_desc: str | None = None,
@@ -402,9 +417,12 @@ class HttpVlmClient(VlmClient):
             prompts = [prompts] * len(images)
         if not isinstance(sampling_params, Sequence):
             sampling_params = [sampling_params] * len(images)
+        if not isinstance(priority, Sequence):
+            priority = [priority] * len(images)
 
         assert len(prompts) == len(images), "Length of prompts and images must match."
         assert len(sampling_params) == len(images), "Length of sampling_params and images must match."
+        assert len(priority) == len(images), "Length of priority and images must match."
 
         if semaphore is None:
             semaphore = asyncio.Semaphore(self.max_concurrency)
@@ -413,6 +431,7 @@ class HttpVlmClient(VlmClient):
             image: Image.Image | bytes | str,
             prompt: str,
             sampling_params: SamplingParams | None,
+            priority: int | None,
             async_client: httpx.AsyncClient,
         ):
             async with semaphore:
@@ -420,12 +439,24 @@ class HttpVlmClient(VlmClient):
                     image=image,
                     prompt=prompt,
                     sampling_params=sampling_params,
+                    priority=priority,
                     async_client=async_client,
                 )
 
-        async with httpx.AsyncClient(timeout=self.http_timeout) as client:
+        async with httpx.AsyncClient(
+            timeout=self.http_timeout,
+            limits=httpx.Limits(max_connections=None, max_keepalive_connections=20),
+        ) as client:
             return await gather_tasks(
-                tasks=[predict_with_semaphore(*args, client) for args in zip(images, prompts, sampling_params)],
+                tasks=[
+                    predict_with_semaphore(*args, client)
+                    for args in zip(
+                        images,
+                        prompts,
+                        sampling_params,
+                        priority,
+                    )
+                ],
                 use_tqdm=use_tqdm,
                 tqdm_desc=tqdm_desc,
             )
@@ -435,15 +466,19 @@ class HttpVlmClient(VlmClient):
         images: Sequence[Image.Image | bytes | str],
         prompts: Sequence[str] | str = "",
         sampling_params: Sequence[SamplingParams | None] | SamplingParams | None = None,
+        priority: Sequence[int | None] | int | None = None,
         semaphore: asyncio.Semaphore | None = None,
     ) -> AsyncIterable[tuple[int, str]]:
         if isinstance(prompts, str):
             prompts = [prompts] * len(images)
         if not isinstance(sampling_params, Sequence):
             sampling_params = [sampling_params] * len(images)
+        if not isinstance(priority, Sequence):
+            priority = [priority] * len(images)
 
         assert len(prompts) == len(images), "Length of prompts and images must match."
         assert len(sampling_params) == len(images), "Length of sampling_params and images must match."
+        assert len(priority) == len(images), "Length of priority and images must match."
 
         if semaphore is None:
             semaphore = asyncio.Semaphore(self.max_concurrency)
@@ -453,6 +488,7 @@ class HttpVlmClient(VlmClient):
             image: Image.Image | bytes | str,
             prompt: str,
             sampling_params: SamplingParams | None,
+            priority: int | None,
             async_client: httpx.AsyncClient,
         ):
             async with semaphore:
@@ -460,19 +496,19 @@ class HttpVlmClient(VlmClient):
                     image=image,
                     prompt=prompt,
                     sampling_params=sampling_params,
+                    priority=priority,
                     async_client=async_client,
                 )
                 return (idx, output)
 
-        async with httpx.AsyncClient(timeout=self.http_timeout) as client:
+        async with httpx.AsyncClient(
+            timeout=self.http_timeout,
+            limits=httpx.Limits(max_connections=None, max_keepalive_connections=20),
+        ) as client:
             pending: set[asyncio.Task[tuple[int, str]]] = set()
 
-            for idx, (prompt, image, params) in enumerate(zip(prompts, images, sampling_params)):
-                pending.add(
-                    asyncio.create_task(
-                        predict_with_semaphore(idx, image, prompt, params, client),
-                    )
-                )
+            for idx, args in enumerate(zip(images, prompts, sampling_params, priority)):
+                pending.add(asyncio.create_task(predict_with_semaphore(idx, *args, client)))
 
             while len(pending) > 0:
                 done, pending = await asyncio.wait(
